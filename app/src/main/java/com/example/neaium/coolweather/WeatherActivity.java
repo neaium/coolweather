@@ -57,12 +57,12 @@ public class WeatherActivity extends AppCompatActivity {
         if (weatherString != null) {
             //有缓存是直接解析天气数据
             Weather weather = Utility.handleWeatherResponse(weatherString);
-//            showWeatherInfo(weather);
+            showWeatherInfo(weather);
         } else {
             //无缓存时去服务器查询天气
             String weatherId = getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.INVISIBLE);
-//            requestWeather(weatherId);
+            requestWeather(weatherId);
         }
 
     }
@@ -73,14 +73,13 @@ public class WeatherActivity extends AppCompatActivity {
     public void requestWeather(final String weatherId) {
         String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=91d5ff3713d44cb5839dfee0c2078c46";
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
 
-            }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final String responseText = response.body().string();
+                final String responseText = response
+                        .body()
+                        .string();
                 final Weather weather = Utility.handleWeatherResponse(responseText);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -89,17 +88,29 @@ public class WeatherActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather", responseText);
                             editor.apply();
-                            showWeaherInfo(weather);
+
+                            showWeatherInfo(weather);
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
+             @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(WeatherActivity.this,"获得天气信息失败",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
         });
     }
 
-    private void showWeaherInfo(Weather weather) {
+    private void showWeatherInfo(Weather weather) {
         String cityName = weather.basic.cityName;
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
         String degree = weather.now.temperature + "°C";
