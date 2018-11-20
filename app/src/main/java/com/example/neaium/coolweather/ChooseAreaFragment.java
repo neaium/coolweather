@@ -167,6 +167,7 @@ public class ChooseAreaFragment extends Fragment {
             for (County county : countyList) {
                 dataList.add(county.getCountyName());
             }
+
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
             currentLevel = LEVEL_COUNTY;

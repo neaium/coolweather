@@ -96,13 +96,14 @@ public class WeatherActivity extends AppCompatActivity {
                     }
                 });
             }
-             @Override
+
+            @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(WeatherActivity.this,"获得天气信息失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WeatherActivity.this, "获得天气信息失败", Toast.LENGTH_SHORT).show();
                     }
                 });
 
